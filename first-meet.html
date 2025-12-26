@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>27.12.2025 | Meetup Plan</title>
+    <style>
+      /* Modern Reset & Base */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --soft-blue: #8ecae6;
+        --soft-blue-dark: #219ebc;
+        --soft-blue-light: #e2f1f8;
+        --soft-gray: #f8fafc;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --accent: #ffb703;
+        --white: #ffffff;
+        --shadow-sm: 0 2px 8px rgba(142, 202, 230, 0.12);
+        --shadow-md: 0 8px 24px rgba(142, 202, 230, 0.15);
+        --shadow-lg: 0 16px 40px rgba(142, 202, 230, 0.2);
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%);
+        color: var(--text-primary);
+        line-height: 1.6;
+        min-height: 100vh;
+        padding: 24px;
+      }
+
+      /* Main Container */
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: var(--white);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(142, 202, 230, 0.1);
+      }
+
+      /* Elegant Header */
+      .header {
+        background: linear-gradient(
+          135deg,
+          var(--soft-blue) 0%,
+          var(--soft-blue-dark) 50%,
+          #023047 100%
+        );
+        color: var(--white);
+        padding: 60px 40px 40px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+            circle at 20% 80%,
+            rgba(255, 255, 255, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(255, 255, 255, 0.08) 0%,
+            transparent 50%
+          );
+      }
+
+      .header-content {
+        position: relative;
+        z-index: 2;
+      }
+
+      .main-title {
+        font-size: 3.2em;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        margin-bottom: 12px;
+        background: linear-gradient(
+          to right,
+          var(--white),
+          var(--soft-blue-light)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 2px 20px rgba(33, 158, 188, 0.3);
+      }
+
+      .date-display {
+        font-size: 1.2em;
+        font-weight: 500;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
+        margin-top: 8px;
+        display: inline-block;
+        padding: 10px 24px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 50px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      /* Gallery Section */
+      .gallery-section {
+        padding: 50px 40px;
+        background: var(--soft-gray);
+      }
+
+      .gallery-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+      }
+
+      .section-title {
+        font-size: 1.8em;
+        font-weight: 600;
+        color: var(--soft-blue-dark);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .section-title::before {
+        content: "";
+        width: 6px;
+        height: 24px;
+        background: var(--accent);
+        border-radius: 3px;
+      }
+
+      .gallery-container {
+        position: relative;
+        height: 480px;
+        border-radius: 20px;
+        overflow: hidden;
+        margin-bottom: 32px;
+        box-shadow: var(--shadow-md);
+        background: linear-gradient(
+          45deg,
+          var(--soft-blue-light),
+          var(--white)
+        );
+      }
+
+      .photo {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transform: scale(1.02);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .photo.active {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .photo-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(
+          to top,
+          rgba(2, 48, 71, 0.9) 0%,
+          rgba(2, 48, 71, 0.4) 50%,
+          transparent 100%
+        );
+        color: var(--white);
+        padding: 40px;
+        transform: translateY(10px);
+        opacity: 0;
+        transition: all 0.5s ease;
+      }
+
+      .photo.active .photo-overlay {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .photo-title {
+        font-size: 1.6em;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--accent);
+      }
+
+      .photo-description {
+        font-size: 1em;
+        opacity: 0.9;
+        max-width: 600px;
+      }
+
+      /* Gallery Navigation */
+      .gallery-nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 24px;
+        margin-bottom: 32px;
+      }
+
+      .nav-btn {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--white);
+        border: 2px solid var(--soft-blue);
+        color: var(--soft-blue-dark);
+        font-size: 1.4em;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .nav-btn:hover {
+        background: var(--soft-blue);
+        color: var(--white);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .photo-counter {
+        font-size: 0.95em;
+        color: var(--text-secondary);
+        font-weight: 500;
+        min-width: 80px;
+        text-align: center;
+      }
+
+      /* Thumbnail Strip */
+      .thumbnail-strip {
+        display: flex;
+        gap: 12px;
+        overflow-x: auto;
+        padding: 16px 0;
+        scrollbar-width: thin;
+        scrollbar-color: var(--soft-blue) transparent;
+      }
+
+      .thumbnail-strip::-webkit-scrollbar {
+        height: 6px;
+      }
+
+      .thumbnail-strip::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .thumbnail-strip::-webkit-scrollbar-thumb {
+        background: var(--soft-blue);
+        border-radius: 3px;
+      }
+
+      .thumbnail {
+        flex: 0 0 auto;
+        width: 100px;
+        height: 80px;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        opacity: 0.6;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        position: relative;
+      }
+
+      .thumbnail:hover {
+        opacity: 0.8;
+        transform: translateY(-4px);
+      }
+
+      .thumbnail.active {
+        opacity: 1;
+        border-color: var(--accent);
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .thumbnail-badge {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 8px;
+        height: 8px;
+        background: var(--accent);
+        border-radius: 50%;
+      }
+
+      /* Timeline Section */
+      .timeline-section {
+        padding: 50px 40px;
+        background: var(--white);
+      }
+
+      .timeline-container {
+        position: relative;
+        margin-top: 32px;
+      }
+
+      .timeline-line {
+        position: absolute;
+        left: 30px;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(
+          to bottom,
+          var(--soft-blue),
+          var(--accent),
+          var(--soft-blue-dark)
+        );
+        border-radius: 2px;
+      }
+
+      .timeline-item {
+        position: relative;
+        margin-bottom: 32px;
+        padding-left: 80px;
+        padding-top: 8px;
+      }
+
+      .timeline-marker {
+        position: absolute;
+        left: 20px;
+        top: 0;
+        width: 24px;
+        height: 24px;
+        background: var(--white);
+        border: 4px solid var(--soft-blue);
+        border-radius: 50%;
+        z-index: 2;
+        box-shadow: 0 0 0 6px rgba(142, 202, 230, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .timeline-item:hover .timeline-marker {
+        border-color: var(--accent);
+        transform: scale(1.2);
+        box-shadow: 0 0 0 8px rgba(255, 183, 3, 0.3);
+      }
+
+      .time-display {
+        font-size: 1.1em;
+        font-weight: 600;
+        color: var(--soft-blue-dark);
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .time-icon {
+        color: var(--accent);
+        font-size: 1.1em;
+      }
+
+      .time-content {
+        background: var(--soft-gray);
+        padding: 20px;
+        border-radius: 16px;
+        border-left: 4px solid var(--soft-blue);
+        transition: all 0.3s ease;
+      }
+
+      .timeline-item:hover .time-content {
+        transform: translateX(8px);
+        border-left-color: var(--accent);
+        box-shadow: var(--shadow-sm);
+      }
+
+      /* Footer */
+      .footer {
+        padding: 40px;
+        text-align: center;
+        background: linear-gradient(135deg, var(--soft-gray), var(--white));
+        border-top: 1px solid rgba(142, 202, 230, 0.3);
+        color: var(--text-secondary);
+      }
+
+      .update-info {
+        font-size: 0.9em;
+        opacity: 0.8;
+        margin-top: 16px;
+      }
+
+      /* Floating Elements */
+      .floating-element {
+        position: absolute;
+        border-radius: 50%;
+        background: linear-gradient(
+          45deg,
+          var(--soft-blue),
+          var(--soft-blue-light)
+        );
+        opacity: 0.1;
+        animation: float 20s infinite linear;
+      }
+
+      .floating-element:nth-child(1) {
+        width: 120px;
+        height: 120px;
+        top: 10%;
+        right: 5%;
+        animation-delay: 0s;
+      }
+
+      .floating-element:nth-child(2) {
+        width: 80px;
+        height: 80px;
+        bottom: 15%;
+        left: 5%;
+        animation-delay: -10s;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+        33% {
+          transform: translate(30px, -30px) rotate(120deg);
+        }
+        66% {
+          transform: translate(-20px, 20px) rotate(240deg);
+        }
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        body {
+          padding: 16px;
+        }
+
+        .container {
+          border-radius: 20px;
+        }
+
+        .header {
+          padding: 40px 24px 30px;
+        }
+
+        .main-title {
+          font-size: 2.4em;
+        }
+
+        .gallery-section,
+        .timeline-section {
+          padding: 40px 24px;
+        }
+
+        .gallery-container {
+          height: 360px;
+        }
+
+        .photo-overlay {
+          padding: 24px;
+        }
+
+        .timeline-item {
+          padding-left: 60px;
+        }
+
+        .timeline-line {
+          left: 20px;
+        }
+
+        .timeline-marker {
+          left: 10px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .main-title {
+          font-size: 2em;
+        }
+
+        .gallery-container {
+          height: 280px;
+        }
+
+        .photo-title {
+          font-size: 1.3em;
+        }
+
+        .nav-btn {
+          width: 48px;
+          height: 48px;
+        }
+
+        .thumbnail {
+          width: 80px;
+          height: 64px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Floating Elements -->
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+
+      <!-- Header -->
+      <header class="header">
+        <div class="header-content">
+          <h1 class="main-title">
+            Meet Up Plan <br />
+            27.12.2025
+          </h1>
+          <div class="date-display">15:00 • Selesai</div>
+        </div>
+      </header>
+
+      <!-- Gallery Section -->
+      <section class="gallery-section">
+        <div class="gallery-header">
+          <h2 class="section-title">Lokasi & Rencana</h2>
+          <div class="photo-counter" id="photoCounter">1/5</div>
+        </div>
+
+        <div class="gallery-container" id="galleryContainer">
+          <!-- Photos will be dynamically loaded -->
+        </div>
+
+        <div class="gallery-nav">
+          <button class="nav-btn" id="prevBtn">←</button>
+          <div class="photo-counter" id="currentCounter">1/5</div>
+          <button class="nav-btn" id="nextBtn">→</button>
+        </div>
+
+        <div class="thumbnail-strip" id="thumbnails">
+          <!-- Thumbnails will be dynamically loaded -->
+        </div>
+      </section>
+
+      <!-- Timeline Section -->
+      <section class="timeline-section">
+        <h2 class="section-title">Jadwal Kegiatan</h2>
+
+        <div class="timeline-container">
+          <div class="timeline-line"></div>
+
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="time-display">
+              <span class="time-icon">⏰</span>
+              <span>14.00 - 14.30</span>
+            </div>
+            <div class="time-content">
+              <strong>Meet Point</strong>
+              <div>Titik pertemuan awal</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="time-display">
+              <span class="time-icon">🏬</span>
+              <span>14.30 - 16.00</span>
+            </div>
+            <div class="time-content">
+              <strong>Bencoolen Mall</strong>
+              <div>Games & shopping time</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="time-display">
+              <span class="time-icon">🍽️</span>
+              <span>16.00 - 17.00</span>
+            </div>
+            <div class="time-content">
+              <strong>Dinner</strong>
+              <div>Makan malam bersama</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="time-display">
+              <span class="time-icon">🌅</span>
+              <span>17.00 - 18.00</span>
+            </div>
+            <div class="time-content">
+              <strong>Sunset</strong>
+              <div>Menikmati senja</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="time-display">
+              <span class="time-icon">🎁</span>
+              <span>18.00 - Selesai</span>
+            </div>
+            <div class="time-content">
+              <strong>Surprise</strong>
+              <div>Apa ya?</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div>© 2025 • Rencana Pertemuan</div>
+        <div class="update-info" id="updateInfo">Last updated: Loading...</div>
+      </footer>
+    </div>
+
+    <script>
+      // Photo data - Ganti dengan foto-foto kamu
+      const photos = [
+        {
+          url: "/map-denah.png",
+          title: "Meeting Point",
+          description: "Titik awal pertemuan",
+        },
+        {
+          url: "/Benmall.jpg",
+          title: "Bencoolen Mall",
+          description: "Games and shopping area",
+        },
+        {
+          url: "/kfc.webp",
+          title: "Dinner Time",
+          description: "Makan malam bersama",
+        },
+        {
+          url: "/sunset.jpg",
+          title: "Sunset View",
+          description: "Menikmati senja di pantai",
+        },
+        {
+          url: "/surprises.png",
+          title: "Surprise Moment",
+          description: "Kejutan spesial untuk hari ini",
+        },
+      ];
+
+      let currentIndex = 0;
+      const galleryContainer = document.getElementById("galleryContainer");
+      const thumbnailsContainer = document.getElementById("thumbnails");
+      const photoCounter = document.getElementById("photoCounter");
+      const currentCounter = document.getElementById("currentCounter");
+      const updateInfo = document.getElementById("updateInfo");
+
+      // Format date for update info
+      function formatUpdateDate() {
+        const now = new Date();
+        return now.toLocaleDateString("id-ID", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+
+      // Initialize gallery
+      function initGallery() {
+        // Update info
+        updateInfo.textContent = `Last updated: ${formatUpdateDate()}`;
+
+        // Create main photos
+        photos.forEach((photo, index) => {
+          const photoElement = document.createElement("div");
+          photoElement.className = "photo";
+          photoElement.style.backgroundImage = `url('${photo.url}')`;
+          photoElement.style.backgroundSize = "cover";
+          photoElement.style.backgroundPosition = "center";
+
+          const overlay = document.createElement("div");
+          overlay.className = "photo-overlay";
+          overlay.innerHTML = `
+                    <div class="photo-title">${photo.title}</div>
+                    <div class="photo-description">${photo.description}</div>
+                `;
+
+          photoElement.appendChild(overlay);
+
+          if (index === 0) {
+            photoElement.classList.add("active");
+          }
+
+          galleryContainer.appendChild(photoElement);
+        });
+
+        // Create thumbnails
+        photos.forEach((photo, index) => {
+          const thumbnail = document.createElement("div");
+          thumbnail.className = `thumbnail ${index === 0 ? "active" : ""}`;
+          thumbnail.style.backgroundImage = `url('${photo.url}')`;
+          thumbnail.style.backgroundSize = "cover";
+          thumbnail.style.backgroundPosition = "center";
+
+          if (index === 0) {
+            const badge = document.createElement("div");
+            badge.className = "thumbnail-badge";
+            thumbnail.appendChild(badge);
+          }
+
+          thumbnail.addEventListener("click", () => {
+            showPhoto(index);
+          });
+
+          thumbnailsContainer.appendChild(thumbnail);
+        });
+
+        updateCounter();
+      }
+
+      // Show specific photo
+      function showPhoto(index) {
+        // Update current index
+        currentIndex = index;
+
+        // Update main photos
+        const allPhotos = document.querySelectorAll(".photo");
+        const allThumbs = document.querySelectorAll(".thumbnail");
+
+        allPhotos.forEach((photo) => photo.classList.remove("active"));
+        allThumbs.forEach((thumb) => {
+          thumb.classList.remove("active");
+          // Remove existing badge
+          const existingBadge = thumb.querySelector(".thumbnail-badge");
+          if (existingBadge) existingBadge.remove();
+        });
+
+        // Activate selected
+        allPhotos[currentIndex].classList.add("active");
+        allThumbs[currentIndex].classList.add("active");
+
+        // Add badge to active thumbnail
+        const activeThumb = allThumbs[currentIndex];
+        const badge = document.createElement("div");
+        badge.className = "thumbnail-badge";
+        activeThumb.appendChild(badge);
+
+        updateCounter();
+      }
+
+      // Next photo
+      function nextPhoto() {
+        currentIndex = (currentIndex + 1) % photos.length;
+        showPhoto(currentIndex);
+      }
+
+      // Previous photo
+      function prevPhoto() {
+        currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+        showPhoto(currentIndex);
+      }
+
+      // Update counter display
+      function updateCounter() {
+        const count = `${currentIndex + 1}/${photos.length}`;
+        photoCounter.textContent = count;
+        currentCounter.textContent = count;
+      }
+
+      // Event listeners
+      document.getElementById("nextBtn").addEventListener("click", nextPhoto);
+      document.getElementById("prevBtn").addEventListener("click", prevPhoto);
+
+      // Keyboard navigation
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight" || e.key === " ") nextPhoto();
+        if (e.key === "ArrowLeft") prevPhoto();
+      });
+
+      // Auto slide
+      let autoSlideInterval;
+
+      function startAutoSlide() {
+        autoSlideInterval = setInterval(nextPhoto, 5000);
+      }
+
+      function stopAutoSlide() {
+        clearInterval(autoSlideInterval);
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", () => {
+        initGallery();
+        startAutoSlide();
+
+        // Pause on hover
+        galleryContainer.addEventListener("mouseenter", stopAutoSlide);
+        galleryContainer.addEventListener("mouseleave", startAutoSlide);
+
+        // Touch/swipe for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        galleryContainer.addEventListener("touchstart", (e) => {
+          touchStartX = e.changedTouches[0].screenX;
+        });
+
+        galleryContainer.addEventListener("touchend", (e) => {
+          touchEndX = e.changedTouches[0].screenX;
+          handleSwipe();
+        });
+
+        function handleSwipe() {
+          const swipeThreshold = 50;
+          const diff = touchStartX - touchEndX;
+
+          if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+              nextPhoto();
+            } else {
+              prevPhoto();
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
