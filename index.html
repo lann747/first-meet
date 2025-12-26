@@ -636,33 +636,35 @@
         <div class="update-info" id="updateInfo">Last updated: Loading...</div>
       </footer>
     </div>
-    const photos = [
-      {
-        url: "map-denah.png",
-        title: "Meeting Point",
-        description: "Titik awal pertemuan",
-      },
-      {
-        url: "Benmall.jpg",
-        title: "Bencoolen Mall",
-        description: "Games and shopping area",
-      },
-      {
-        url: "kfc.webp",
-        title: "Dinner Time",
-        description: "Makan malam bersama",
-      },
-      {
-        url: "sunset.jpg",
-        title: "Sunset View",
-        description: "Menikmati senja di pantai",
-      },
-      {
-        url: "surprises.png",
-        title: "Surprise Moment",
-        description: "Kejutan kecil yang sederhana",
-      },
-    ];
+
+    <script>
+      const photos = [
+        {
+          url: "map-denah.png",
+          title: "Meeting Point",
+          description: "Titik awal pertemuan",
+        },
+        {
+          url: "Benmall.jpg",
+          title: "Bencoolen Mall",
+          description: "Games and shopping area",
+        },
+        {
+          url: "kfc.webp",
+          title: "Dinner Time",
+          description: "Makan malam bersama",
+        },
+        {
+          url: "sunset.jpg",
+          title: "Sunset View",
+          description: "Menikmati senja di pantai",
+        },
+        {
+          url: "surprises.png",
+          title: "Surprise Moment",
+          description: "Kejutan kecil yang sederhana",
+        },
+      ];
 
       let currentIndex = 0;
       const galleryContainer = document.getElementById("galleryContainer");
@@ -671,7 +673,6 @@
       const currentCounter = document.getElementById("currentCounter");
       const updateInfo = document.getElementById("updateInfo");
 
-      // Format date for update info
       function formatUpdateDate() {
         const now = new Date();
         return now.toLocaleDateString("id-ID", {
@@ -684,12 +685,9 @@
         });
       }
 
-      // Initialize gallery
       function initGallery() {
-        // Update info
         updateInfo.textContent = `Last updated: ${formatUpdateDate()}`;
 
-        // Create main photos
         photos.forEach((photo, index) => {
           const photoElement = document.createElement("div");
           photoElement.className = "photo";
@@ -700,20 +698,16 @@
           const overlay = document.createElement("div");
           overlay.className = "photo-overlay";
           overlay.innerHTML = `
-                    <div class="photo-title">${photo.title}</div>
-                    <div class="photo-description">${photo.description}</div>
-                `;
+            <div class="photo-title">${photo.title}</div>
+            <div class="photo-description">${photo.description}</div>
+          `;
 
           photoElement.appendChild(overlay);
 
-          if (index === 0) {
-            photoElement.classList.add("active");
-          }
-
+          if (index === 0) photoElement.classList.add("active");
           galleryContainer.appendChild(photoElement);
         });
 
-        // Create thumbnails
         photos.forEach((photo, index) => {
           const thumbnail = document.createElement("div");
           thumbnail.className = `thumbnail ${index === 0 ? "active" : ""}`;
@@ -721,127 +715,47 @@
           thumbnail.style.backgroundSize = "cover";
           thumbnail.style.backgroundPosition = "center";
 
-          if (index === 0) {
-            const badge = document.createElement("div");
-            badge.className = "thumbnail-badge";
-            thumbnail.appendChild(badge);
-          }
-
-          thumbnail.addEventListener("click", () => {
-            showPhoto(index);
-          });
-
+          thumbnail.addEventListener("click", () => showPhoto(index));
           thumbnailsContainer.appendChild(thumbnail);
         });
 
         updateCounter();
       }
 
-      // Show specific photo
       function showPhoto(index) {
-        // Update current index
         currentIndex = index;
-
-        // Update main photos
         const allPhotos = document.querySelectorAll(".photo");
         const allThumbs = document.querySelectorAll(".thumbnail");
 
-        allPhotos.forEach((photo) => photo.classList.remove("active"));
-        allThumbs.forEach((thumb) => {
-          thumb.classList.remove("active");
-          // Remove existing badge
-          const existingBadge = thumb.querySelector(".thumbnail-badge");
-          if (existingBadge) existingBadge.remove();
-        });
+        allPhotos.forEach(p => p.classList.remove("active"));
+        allThumbs.forEach(t => t.classList.remove("active"));
 
-        // Activate selected
         allPhotos[currentIndex].classList.add("active");
         allThumbs[currentIndex].classList.add("active");
-
-        // Add badge to active thumbnail
-        const activeThumb = allThumbs[currentIndex];
-        const badge = document.createElement("div");
-        badge.className = "thumbnail-badge";
-        activeThumb.appendChild(badge);
 
         updateCounter();
       }
 
-      // Next photo
       function nextPhoto() {
         currentIndex = (currentIndex + 1) % photos.length;
         showPhoto(currentIndex);
       }
 
-      // Previous photo
       function prevPhoto() {
         currentIndex = (currentIndex - 1 + photos.length) % photos.length;
         showPhoto(currentIndex);
       }
 
-      // Update counter display
       function updateCounter() {
         const count = `${currentIndex + 1}/${photos.length}`;
         photoCounter.textContent = count;
         currentCounter.textContent = count;
       }
 
-      // Event listeners
       document.getElementById("nextBtn").addEventListener("click", nextPhoto);
       document.getElementById("prevBtn").addEventListener("click", prevPhoto);
 
-      // Keyboard navigation
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowRight" || e.key === " ") nextPhoto();
-        if (e.key === "ArrowLeft") prevPhoto();
-      });
-
-      // Auto slide
-      let autoSlideInterval;
-
-      function startAutoSlide() {
-        autoSlideInterval = setInterval(nextPhoto, 5000);
-      }
-
-      function stopAutoSlide() {
-        clearInterval(autoSlideInterval);
-      }
-
-      // Initialize
-      document.addEventListener("DOMContentLoaded", () => {
-        initGallery();
-        startAutoSlide();
-
-        // Pause on hover
-        galleryContainer.addEventListener("mouseenter", stopAutoSlide);
-        galleryContainer.addEventListener("mouseleave", startAutoSlide);
-
-        // Touch/swipe for mobile
-        let touchStartX = 0;
-        let touchEndX = 0;
-
-        galleryContainer.addEventListener("touchstart", (e) => {
-          touchStartX = e.changedTouches[0].screenX;
-        });
-
-        galleryContainer.addEventListener("touchend", (e) => {
-          touchEndX = e.changedTouches[0].screenX;
-          handleSwipe();
-        });
-
-        function handleSwipe() {
-          const swipeThreshold = 50;
-          const diff = touchStartX - touchEndX;
-
-          if (Math.abs(diff) > swipeThreshold) {
-            if (diff > 0) {
-              nextPhoto();
-            } else {
-              prevPhoto();
-            }
-          }
-        }
-      });
+      document.addEventListener("DOMContentLoaded", initGallery);
     </script>
   </body>
 </html>
